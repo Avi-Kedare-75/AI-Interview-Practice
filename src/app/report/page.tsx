@@ -89,7 +89,7 @@ function ReportContent() {
           <Button variant="outline" className="gap-2">
             <Share2 className="h-4 w-4" /> Share
           </Button>
-          <Button className="gap-2 gradient-bg text-white border-0">
+          <Button className="gap-2 gradient-bg text-white border-0" onClick={() => window.print()}>
             <Download className="h-4 w-4" /> Download PDF
           </Button>
         </div>

@@ -83,7 +83,7 @@ export default function VoicePanel({
     if (!SpeechRecognition || recognitionRef.current) return;
 
     const rec = new SpeechRecognition();
-    rec.continuous = true;
+    rec.continuous = false;
     rec.interimResults = true;
     rec.lang = "en-US";
 
@@ -157,6 +157,10 @@ export default function VoicePanel({
         recognitionActiveRef.current = true;
       } catch (startError) {
         console.error("Failed to sync speech recognition start:", startError);
+        window.setTimeout(() => {
+          setError("Could not start voice input. Please try again.");
+          setActiveListening(false);
+        }, 0);
       }
       return;
     }
@@ -170,7 +174,7 @@ export default function VoicePanel({
         recognitionActiveRef.current = false;
       }
     }
-  }, [activeListening]);
+  }, [activeListening, setActiveListening]);
 
   const startListening = useCallback(() => {
     if (!isSupported) {
@@ -187,10 +191,13 @@ export default function VoicePanel({
     try {
       setError(null);
       setActiveListening(true);
+      recognition.start();
+      recognitionActiveRef.current = true;
     } catch (startError) {
       console.error("Failed to start speech recognition:", startError);
       setError("Could not start voice input. Please refresh the page and try again.");
       setActiveListening(false);
+      recognitionActiveRef.current = false;
     }
   }, [isSupported, setActiveListening]);
 
@@ -202,6 +209,8 @@ export default function VoicePanel({
       recognition?.stop();
     } catch (stopError) {
       console.error("Failed to stop speech recognition:", stopError);
+    } finally {
+      recognitionActiveRef.current = false;
     }
   }, [setActiveListening]);
 

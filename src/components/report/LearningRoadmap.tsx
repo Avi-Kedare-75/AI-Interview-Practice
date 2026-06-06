@@ -29,7 +29,7 @@ export default function LearningRoadmap({ roadmap: propRoadmap }: LearningRoadma
           <Map className="h-5 w-5 text-primary" />
           Personalized Learning Roadmap
         </h3>
-        <Button variant="outline" size="sm" className="gap-2">
+        <Button variant="outline" size="sm" className="gap-2" onClick={() => window.print()}>
           Export Plan <ArrowRight className="h-4 w-4" />
         </Button>
       </div>
@@ -86,7 +86,14 @@ export default function LearningRoadmap({ roadmap: propRoadmap }: LearningRoadma
                 <p className="text-sm text-muted-foreground">{item.description}</p>
                 
                 {isCurrent && (
-                  <Button size="sm" className="mt-4 gap-2 gradient-bg text-white border-0">
+                  <Button 
+                    size="sm" 
+                    className="mt-4 gap-2 gradient-bg text-white border-0"
+                    onClick={() => {
+                      alert(`Starting modules for Week ${item.week}: ${item.title}`);
+                      window.location.href = '/dashboard';
+                    }}
+                  >
                     Start Week {item.week} <ArrowRight className="h-3 w-3" />
                   </Button>
                 )}

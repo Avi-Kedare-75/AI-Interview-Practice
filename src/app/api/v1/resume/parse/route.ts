@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { auth } from "@/auth";
-import { PDFParse } from "pdf-parse";
+import pdfParse from "pdf-parse";
 
 export const runtime = "nodejs";
 

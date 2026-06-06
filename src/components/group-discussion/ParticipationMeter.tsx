@@ -1,13 +1,17 @@
 "use client";
 
 import { motion } from "motion/react";
-import { discussionParticipants } from "@/data/mock";
 import { Progress } from "@/components/ui/progress";
 import { Activity } from "lucide-react";
+import type { Participant } from "./DiscussionArena";
 
-export default function ParticipationMeter() {
+interface ParticipationMeterProps {
+  participants: Participant[];
+}
+
+export default function ParticipationMeter({ participants }: ParticipationMeterProps) {
   // Sort participants by participation score
-  const sortedParticipants = [...discussionParticipants].sort(
+  const sortedParticipants = [...participants].sort(
     (a, b) => b.participationScore - a.participationScore
   );
 
@@ -33,7 +37,7 @@ export default function ParticipationMeter() {
                 {participant.name} {!participant.isAI && "(You)"}
               </span>
               <span className="text-muted-foreground text-xs">
-                {participant.contributions} contributions
+                {participant.contributions} words
               </span>
             </div>
             <div className="flex items-center gap-3">

@@ -11,7 +11,13 @@ import {
 } from "recharts";
 import { skillScores } from "@/data/mock";
 
-export default function SkillRadarChart() {
+interface SkillRadarChartProps {
+  data?: any[];
+}
+
+export default function SkillRadarChart({ data }: SkillRadarChartProps) {
+  const chartData = data || skillScores;
+
   return (
     <div className="glass-card rounded-2xl p-6 flex flex-col h-[400px]">
       <h3 className="mb-2 text-lg font-semibold font-heading">Skill Analysis</h3>
@@ -21,7 +27,7 @@ export default function SkillRadarChart() {
 
       <div className="flex-1 w-full min-h-0">
         <ResponsiveContainer width="100%" height="100%">
-          <RadarChart cx="50%" cy="50%" outerRadius="70%" data={skillScores}>
+          <RadarChart cx="50%" cy="50%" outerRadius="70%" data={chartData}>
             <PolarGrid stroke="currentColor" className="text-border opacity-50" />
             <PolarAngleAxis
               dataKey="skill"

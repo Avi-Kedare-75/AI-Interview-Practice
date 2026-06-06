@@ -1,26 +1,39 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Lightbulb, ArrowRight, Clock, Target } from "lucide-react";
+import { Lightbulb, ArrowRight, Clock, Target, BookOpen } from "lucide-react";
 import { learningRecommendations } from "@/data/mock";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-export default function LearningRecommendations() {
+interface LearningRecommendationsProps {
+  data?: {
+    id: string;
+    title: string;
+    description: string;
+    priority: "high" | "medium" | "low";
+    estimatedTime: string;
+    category: string;
+  }[];
+}
+
+export default function LearningRecommendations({ data }: LearningRecommendationsProps) {
+  const recommendationsData = data || learningRecommendations;
+
   return (
     <div className="glass-card rounded-2xl p-6">
       <div className="mb-6 flex items-center justify-between">
         <h3 className="text-lg font-semibold font-heading flex items-center gap-2">
-          <Lightbulb className="h-5 w-5 text-warning" />
+          <BookOpen className="h-5 w-5 text-primary" />
           Recommended Focus Areas
         </h3>
-        <Button variant="ghost" size="sm" className="text-muted-foreground">
-          View All
+        <Button variant="ghost" size="sm" className="h-8 gap-1">
+          View Roadmap <ArrowRight className="h-4 w-4" />
         </Button>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        {learningRecommendations.slice(0, 4).map((rec, index) => (
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {recommendationsData.map((rec, index) => (
           <motion.div
             key={rec.id}
             initial={{ opacity: 0, y: 20 }}

@@ -2,9 +2,22 @@
 
 import { motion } from "motion/react";
 import { User, Bot, Mic } from "lucide-react";
-import { discussionParticipants } from "@/data/mock";
 
-export default function DiscussionArena() {
+export interface Participant {
+  id: string;
+  name: string;
+  isAI: boolean;
+  isSpeaking: boolean;
+  contributions: number;
+  participationScore: number;
+}
+
+interface DiscussionArenaProps {
+  participants: Participant[];
+  timeLeft?: string;
+}
+
+export default function DiscussionArena({ participants, timeLeft = "15:00" }: DiscussionArenaProps) {
   return (
     <div className="glass-card relative flex h-[500px] w-full flex-col items-center justify-center rounded-2xl p-8 overflow-hidden">
       {/* Background ripples */}
@@ -14,8 +27,8 @@ export default function DiscussionArena() {
       </div>
 
       <div className="relative h-80 w-80 max-w-full">
-        {discussionParticipants.map((participant, index) => {
-          const total = discussionParticipants.length;
+        {participants.map((participant, index) => {
+          const total = participants.length;
           const angle = (index * (360 / total)) * (Math.PI / 180);
           
           // Calculate positions in a circle
@@ -66,7 +79,7 @@ export default function DiscussionArena() {
         {/* Center element (e.g. topic icon or timer) */}
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex h-24 w-24 flex-col items-center justify-center rounded-full border border-border bg-card/50 backdrop-blur-md shadow-inner">
           <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Time Left</span>
-          <span className="text-xl font-bold font-mono text-primary mt-1">24:15</span>
+          <span className="text-xl font-bold font-mono text-primary mt-1">{timeLeft}</span>
         </div>
       </div>
     </div>

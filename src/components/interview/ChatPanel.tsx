@@ -13,6 +13,9 @@ interface ChatPanelProps {
   interviewerName?: string;
   onSendMessage?: (text: string) => void;
   isInteractive?: boolean;
+  isInterviewerTyping?: boolean;
+  inputValue?: string;
+  onInputChange?: (val: string) => void;
 }
 
 export default function ChatPanel({
@@ -20,12 +23,25 @@ export default function ChatPanel({
   interviewerName = "Dr. Sarah",
   onSendMessage,
   isInteractive = false,
+  isInterviewerTyping = false,
+  inputValue: externalInputValue,
+  onInputChange,
 }: ChatPanelProps) {
-  const [inputValue, setInputValue] = useState("");
+  const [internalInputValue, setInternalInputValue] = useState("");
+  const isControlled = externalInputValue !== undefined;
+  const inputValue = isControlled ? externalInputValue : internalInputValue;
+
+  const setInputValue = (val: string) => {
+    if (isControlled && onInputChange) {
+      onInputChange(val);
+    } else {
+      setInternalInputValue(val);
+    }
+  };
+
   const displayMessages = messages || mockChatMessages;
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Auto scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [displayMessages]);
@@ -55,7 +71,7 @@ export default function ChatPanel({
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-success"></span>
             </span>
-            Active
+            {isInterviewerTyping ? "Typing..." : "Active"}
           </p>
         </div>
       </div>
@@ -63,6 +79,8 @@ export default function ChatPanel({
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
         {displayMessages.map((msg, index) => {
           const isAi = msg.sender === "ai";
+          const speakerLabel = isAi ? msg.agentName || interviewerName : "You";
+
           return (
             <motion.div
               key={msg.id || index}
@@ -71,7 +89,11 @@ export default function ChatPanel({
               transition={{ duration: 0.3 }}
               className={`flex gap-3 max-w-[85%] ${isAi ? "self-start" : "self-end ml-auto flex-row-reverse"}`}
             >
-              <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full mt-auto ${isAi ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"}`}>
+              <div
+                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full mt-auto ${
+                  isAi ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"
+                }`}
+              >
                 {isAi ? <Bot className="h-4 w-4" /> : <User className="h-4 w-4" />}
               </div>
               <div className={`flex flex-col ${isAi ? "items-start" : "items-end"}`}>
@@ -85,7 +107,7 @@ export default function ChatPanel({
                   {msg.content}
                 </div>
                 <span className="text-[10px] text-muted-foreground mt-1 px-1">
-                  {msg.timestamp}
+                  {speakerLabel} | {msg.timestamp}
                 </span>
               </div>
             </motion.div>
